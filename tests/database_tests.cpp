@@ -11,7 +11,7 @@ constexpr int SQLITE_ERROR = 1;
 
 class MockSqlite3 : public ISqlite3 {
 public:
-    MOCK_METHOD(int, open, (const std::string& filename, sqlite3** db), (override));
+    MOCK_METHOD(int, open, (std::string_view filename, sqlite3** db), (override));
     MOCK_METHOD(int, close, (sqlite3 * db), (override));
     MOCK_METHOD(const char*, errmsg, (sqlite3 * db), (override));
 };
@@ -30,7 +30,7 @@ TEST_F(DatabaseTest, CreateDatabaseSuccess)
 
     EXPECT_CALL(mockSqlite, open("test.db", _))
         .WillOnce(
-            [&](const std::string&, sqlite3** db) {
+            [&](std::string_view, sqlite3** db) {
                 *db = &fakeDb;
                 return SQLITE_OK;
             });
@@ -46,7 +46,7 @@ TEST_F(DatabaseTest, CreateDatabaseFailure)
 
     EXPECT_CALL(mockSqlite, open("/invalid/path/to/db.sqlite", _))
         .WillOnce(
-            [&](const std::string&, sqlite3** db) {
+            [&](std::string_view, sqlite3** db) {
                 *db = &fakeDb;
                 return SQLITE_ERROR;
             });

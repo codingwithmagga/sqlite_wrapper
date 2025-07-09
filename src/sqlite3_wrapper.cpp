@@ -3,9 +3,9 @@
 
 class Sqlite3Wrapper : public ISqlite3 {
 public:
-    int open(const std::string& filename, sqlite3** db) override
+    int open(std::string_view filename, sqlite3** db) override
     {
-        return sqlite3_open(filename.c_str(), db);
+        return sqlite3_open(filename.data(), db);
     }
     int close(sqlite3* db) override
     {
